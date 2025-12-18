@@ -22,7 +22,7 @@ export default function DialogDeleteProduct(product: ICartProduct) {
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogTitle>Você tem certeza absoluta?</AlertDialogTitle>
           <AlertDialogDescription>
             Esta ação não pode ser desfeita.
             Isso irá excluir permanentemente esse produto do seu carrinho.

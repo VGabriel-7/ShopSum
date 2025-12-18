@@ -15,13 +15,14 @@ import { Label } from "@/components/ui/label"
 import { IoAddOutline  } from "react-icons/io5"
 import { IoIosRemove } from "react-icons/io";
 import useCartStore from "@/src/stores/cart.store"
-import { FormProvider, useForm, useFormContext } from "react-hook-form"
+import { FormProvider, useForm } from "react-hook-form"
 import { FormSchemaCreateProduct, type FormDataCreate } from "./schemas"
 import ErrorMessage from "../Form/ErrorMessage"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { nanoid } from "nanoid"
 import { formatter } from "@/src/utils/formatter"
 import { useEffect, useState } from "react"
+import { NumericFormat } from "react-number-format"
 
 export function AddProductDialog() {
   const { addProduct } = useCartStore()
@@ -94,15 +95,29 @@ export function AddProductDialog() {
                   </div>
                   <div className="grid gap-3">
                     <Label htmlFor="price">Preço Unitário</Label>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 items-center">
                       <h1 className="text-3xl font-medium text-shops-text-dark opacity-80">R$</h1>
-                      <Input id="price" step="any" {...methods.register("price")} name="price" type="number" />
-                      <ErrorMessage error={methods.formState.errors.price?.message} />
+                      <NumericFormat
+                        id="price"
+                        name="price"
+                        value={methods.watch("price") || null}
+                        onValueChange={(values) => {
+                          methods.setValue("price", values.floatValue || 0)
+                        }}
+                        decimalSeparator=","
+                        thousandSeparator="."
+                        decimalScale={2}
+                        fixedDecimalScale
+                        allowNegative={false}
+                        placeholder="0,00"
+                        className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                      />
                     </div>
+                    <ErrorMessage error={methods.formState.errors.price?.message} />
                   </div>
                   <div className="flex justify-between px-3 py-5 bg-[#edf1ff] rounded-md items-center text-shops-text-dark border-[1px] border-[#e0e8ff]">
                     <h2 className="text-sm opacity-80 font-medium">Subtotal</h2>
-                    <h1 className="text-2xl text-shops-primary font-bold">{formattedPrice === "R$ NaN" ? "0,00" : formattedPrice}</h1>
+                    <h1 className="text-2xl text-shops-primary font-bold">{formattedPrice === "R$ NaN" ? "R$ 0,00" : formattedPrice}</h1>
                   </div>
                 </div>
                 <DialogFooter className="p-2 gap-3 flex-row justify-center">
